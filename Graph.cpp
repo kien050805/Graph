@@ -96,6 +96,10 @@ void Graph::deleteVertex(int u)
 
 void Graph::addVertex(int u)
 {
+    if (check_vertex(u))
+    {
+        throw vertex_exception();
+    };
     sorted.push_back(u);
     Adj.insert({u, vector<int>()});
 };

@@ -1,5 +1,5 @@
 //========================================================
-// Graph.hpp 
+// Graph.cpp 
 // James Bui & Kien Le & Trinity Meckel 
 // December 9, 2024
 //

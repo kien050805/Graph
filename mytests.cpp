@@ -30,6 +30,15 @@ bool testDFS_VISIT();
 bool testDFS();
 bool testgetOrdering();
 
+
+//==============================================================
+// main
+// Initiate testing by calling testing methods.
+// PARAMETERS:
+// - none
+// RETURN VALUE:
+// - 0
+//==============================================================
 int main()
 {
     cout << "Testing Graph: " << endl;

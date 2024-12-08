@@ -1,18 +1,18 @@
 //========================================================
-// Graph.cpp 
-// James Bui & Kien Le & Trinity Meckel 
+// Graph.cpp
+// James Bui & Kien Le & Trinity Meckel
 // December 9, 2024
 //
 // Description:
-// This source file implements the methods of the Graph class as 
-// defined in Graph.hpp. 
+// This source file implements the methods of the Graph class as
+// defined in Graph.hpp.
 //========================================================
 #include "Graph.hpp"
 using namespace std;
 
 //==============================================================
 // Graph
-// Default constructor for the Graph class. Initializes an empty 
+// Default constructor for the Graph class. Initializes an empty
 // graph with no vertices or edges.
 // PARAMETERS:
 // - none
@@ -23,7 +23,7 @@ Graph::Graph() {};
 
 //==============================================================
 // Graph
-// Copy constructor for the Graph class. Creates a deep copy of 
+// Copy constructor for the Graph class. Creates a deep copy of
 // the given graph, duplicating its adjacency list and sorted order.
 // PARAMETERS:
 // - G: A reference to the Graph object to copy.
@@ -38,7 +38,7 @@ Graph::Graph(const Graph &G)
 
 //==============================================================
 // ~Graph
-// Destructor for the Graph class. Frees any dynamically allocated 
+// Destructor for the Graph class. Frees any dynamically allocated
 // resources (if applicable).
 // PARAMETERS:
 // - none
@@ -49,7 +49,7 @@ Graph::~Graph() {};
 
 //==============================================================
 // operator=
-// Assignment operator for the Graph class. Copies the adjacency 
+// Assignment operator for the Graph class. Copies the adjacency
 // list and sorted order from the given graph.
 // PARAMETERS:
 // - G: A reference to the Graph object to copy.
@@ -102,8 +102,21 @@ bool Graph::check_edge(int u, int v) const
 }
 
 //==============================================================
+// is_empty
+// Checks if the graph is empty.
+// PARAMETERS:
+// - none
+// RETURN VALUE:
+// - true if the graph is empty, false otherwise.
+//==============================================================
+bool Graph::is_empty() const
+{
+    return sorted.empty();
+}
+
+//==============================================================
 // addEdge
-// Adds a directed edge from vertex `u` to vertex `v`. If either vertex 
+// Adds a directed edge from vertex `u` to vertex `v`. If either vertex
 // does not exist or the edge already exists, no action is taken.
 // PARAMETERS:
 // - u: The source vertex.
@@ -130,7 +143,7 @@ void Graph::addEdge(int u, int v)
 
 //==============================================================
 // removeEdge
-// Removes a directed edge from vertex `u` to vertex `v`. Throws an 
+// Removes a directed edge from vertex `u` to vertex `v`. Throws an
 // edge_exception if the edge does not exist.
 // PARAMETERS:
 // - u: The source vertex.
@@ -153,7 +166,7 @@ void Graph::removeEdge(int u, int v)
 
 //==============================================================
 // edgeIn
-// Checks if a directed edge exists from vertex `u` to vertex `v` 
+// Checks if a directed edge exists from vertex `u` to vertex `v`
 // within the adjacency list.
 // PARAMETERS:
 // - u: The source vertex.
@@ -175,7 +188,7 @@ bool Graph::edgeIn(int u, int v)
 
 //==============================================================
 // deleteVertex
-// Deletes a vertex `u` and all edges associated with it. Removes 
+// Deletes a vertex `u` and all edges associated with it. Removes
 // any incoming edges to `u` from other vertices.
 // PARAMETERS:
 // - u: The vertex to delete.
@@ -196,7 +209,7 @@ void Graph::deleteVertex(int u)
 
 //==============================================================
 // addVertex
-// Adds a new vertex to the graph. Throws a vertex_exception if the 
+// Adds a new vertex to the graph. Throws a vertex_exception if the
 // vertex already exists.
 // PARAMETERS:
 // - u: The vertex to add.
@@ -215,18 +228,22 @@ void Graph::addVertex(int u)
 
 //==============================================================
 // breadthFirstSearch
-// Performs a breadth-first search (BFS) starting from vertex `s`. 
-// Tracks the distance of each vertex from `s` and their parent 
+// Performs a breadth-first search (BFS) starting from vertex `s`.
+// Tracks the distance of each vertex from `s` and their parent
 // vertices in the BFS tree.
 // PARAMETERS:
 // - s: The starting vertex.
 // RETURN VALUE:
-// - An unordered_map where each key is a vertex, and the value 
+// - An unordered_map where each key is a vertex, and the value
 //   is a pair (distance, parent).
 //==============================================================
 unordered_map<int, pair<int, int>> Graph::breadthFirstSearch(int s)
 {
     unordered_map<int, pair<int, int>> BFS;
+    if (is_empty())
+    {
+        return BFS;
+    };
     for (int i = 0; i < sorted.size(); i++)
     {
         BFS.insert({sorted[i], pair<int, int>(-1, 0)}); // -1 as unreachable, 0 as NIL
@@ -254,8 +271,8 @@ unordered_map<int, pair<int, int>> Graph::breadthFirstSearch(int s)
 
 //==============================================================
 // DFS_visit
-// Recursive helper function for depth-first search. Updates the 
-// discovery and finish times of each vertex and optionally inserts 
+// Recursive helper function for depth-first search. Updates the
+// discovery and finish times of each vertex and optionally inserts
 // vertices into the topological order.
 // PARAMETERS:
 // - u: The current vertex.
@@ -289,19 +306,22 @@ void Graph::DFS_visit(int u, unordered_map<int, tuple<int, int, int>> &DFS, int 
 
 //==============================================================
 // depthFirstSearch
-// Performs a depth-first search (DFS) on the graph. Tracks discovery 
-// and finish times for each vertex and optionally generates a 
+// Performs a depth-first search (DFS) on the graph. Tracks discovery
+// and finish times for each vertex and optionally generates a
 // topological ordering.
 // PARAMETERS:
 // - sort: A boolean indicating whether to generate a topological sort.
 // RETURN VALUE:
-// - An unordered_map where each key is a vertex, and the value 
+// - An unordered_map where each key is a vertex, and the value
 //   is a tuple (discovery_time, finish_time, parent).
 //==============================================================
 unordered_map<int, tuple<int, int, int>> Graph::depthFirstSearch(bool sort)
 {
     unordered_map<int, tuple<int, int, int>> DFS;
-
+    if (is_empty())
+    {
+        return DFS;
+    };
     for (int i = 0; i < sorted.size(); i++)
     {
         DFS[sorted[i]] = make_tuple(-1, -1, 0); // -1, -1 as time sentinel, 0 as NIL
@@ -320,7 +340,7 @@ unordered_map<int, tuple<int, int, int>> Graph::depthFirstSearch(bool sort)
 
 //==============================================================
 // getOrdering
-// Retrieves the vertex order generated by depth-first search. 
+// Retrieves the vertex order generated by depth-first search.
 // Typically used for topological sorting.
 // PARAMETERS:
 // - none
@@ -334,8 +354,8 @@ vector<int> Graph::getOrdering()
 
 //==============================================================
 // readFromSTDIN
-// Reads a graph's vertices and edges from standard input. Expects the 
-// number of vertices (n) and edges (m) followed by m pairs of integers 
+// Reads a graph's vertices and edges from standard input. Expects the
+// number of vertices (n) and edges (m) followed by m pairs of integers
 // representing directed edges.
 // PARAMETERS:
 // - none

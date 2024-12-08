@@ -35,6 +35,7 @@ private:
 
     bool check_vertex(int u) const;
     bool check_edge(int u, int v) const;
+    bool is_empty() const;
 
     void DFS_visit(int u, unordered_map<int, tuple<int, int, int>> &DFS, int &time, bool sort);
 

@@ -506,7 +506,7 @@ void testGraph()
     cout << "Graph Tests Passed: " << graph_result.passed << endl;
     cout << "Graph Tests Failed: " << graph_result.failed << endl;
     cout << endl;
-}
+};
 
 
 

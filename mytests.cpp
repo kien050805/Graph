@@ -1,3 +1,11 @@
+//========================================================
+// mytests.cpp 
+// James Bui & Kien Le & Trinity Meckel 
+// December 9, 2024
+//
+// Description:
+// This file contains the tests cases for the Graph class
+//========================================================
 #include <iostream>
 #include <tuple>
 #include "Graph.hpp"

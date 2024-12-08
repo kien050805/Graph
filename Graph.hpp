@@ -1,3 +1,17 @@
+//========================================================
+// Graph.hpp 
+// James Bui & Kien Le & Trinity Meckel 
+// December 9, 2024
+//
+// Description: 
+// This header file defines the Graph class, which represents a graph 
+// using an adjacency list. The class provides methods for adding vertices, 
+// adding edges, and performing depth-first search (DFS) and breadth-first 
+// search (BFS). The DFS implementation supports tracking discovery and 
+// finish times for each vertex and returns an ordering of vertices based 
+// on the traversal. The graph also supports retrieving the order of 
+// vertices for tasks such as topological sorting.
+//========================================================
 #include <iostream>
 #include <list>
 #include <tuple>

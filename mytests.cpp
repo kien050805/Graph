@@ -18,9 +18,9 @@ void test_addEdge(int &testPassed, int &testFailed);
 void test_removeEdge(int &testPassed, int &testFailed);
 void test_deleteVertex(int &testPassed, int &testFailed);
 void test_edgeIn(int &testPassed, int &testFailed);
-void test_breadthFirstSearch(int &testPassed, int &testFailed, Graph& g);
-void test_depthFirstSearch(int &testPassed, int &testFailed, Graph& g);
-void test_getOrdering(int &testPassed, int &testFailed, Graph& g);
+void test_breadthFirstSearch(int &testPassed, int &testFailed);
+void test_depthFirstSearch(int &testPassed, int &testFailed);
+void test_getOrdering(int &testPassed, int &testFailed);
 void test_readFromSTDIN(int &testPassed, int &testFailed, Graph& g);
 
 int main() {
@@ -37,9 +37,9 @@ int main() {
     test_removeEdge(testPassed, testFailed);
     test_deleteVertex(testPassed, testFailed);
     test_edgeIn(testPassed, testFailed);
-    test_breadthFirstSearch(testPassed, testFailed, g);
-    test_depthFirstSearch(testPassed, testFailed, g);
-    test_getOrdering(testPassed, testFailed, g);
+    test_breadthFirstSearch(testPassed, testFailed);
+    test_depthFirstSearch(testPassed, testFailed);
+    test_getOrdering(testPassed, testFailed);
     test_readFromSTDIN(testPassed, testFailed, g);
 
     cout << "Total Tests: " << testPassed + testFailed << endl;
@@ -153,14 +153,38 @@ void test_edgeIn(int &testPassed, int &testFailed) {
 //=========================================================
 // Test breadthFirstSearch
 // Purpose:
-//  - Verify BFS traversal and distance computation.
+//  - Verify BFS traversal and distance computation with a specific graph input.
 //=========================================================
-void test_breadthFirstSearch(int &testPassed, int &testFailed, Graph& g) {
+void test_breadthFirstSearch(int &testPassed, int &testFailed) {
     try {
+        Graph g;
+        g.addVertex(1);
+        g.addVertex(2);
+        g.addVertex(3);
+        g.addVertex(4);
+        g.addVertex(5);
+        g.addVertex(6);
+
+        g.addEdge(1, 2);
+        g.addEdge(1, 4);
+        g.addEdge(2, 5);
+        g.addEdge(3, 5);
+        g.addEdge(3, 6);
+        g.addEdge(4, 5);
+        g.addEdge(5, 5); // Self-loop on vertex 5
+        g.addEdge(6, 6); // Self-loop on vertex 6
+
+        // Perform BFS starting from vertex 1
         auto bfs = g.breadthFirstSearch(1);
-        assert(bfs[1].first == 0);  // Distance to itself
-        assert(bfs[2].first == 1);  // Distance to 2
-        assert(bfs[3].first == 1);  // Distance to 3
+
+        // Verify distances
+        assert(bfs[1].first == 0); // Distance to itself
+        assert(bfs[2].first == 1); // Distance to vertex 2
+        assert(bfs[4].first == 1); // Distance to vertex 4
+        assert(bfs[5].first == 2); // Distance to vertex 5
+        assert(bfs[3].first == -1); // Vertex 3 is not reachable
+        assert(bfs[6].first == -1); // Vertex 6 is not reachable
+
         testPassed++;
         cout << "Passed test_breadthFirstSearch" << endl;
     } catch (const exception &e) {
@@ -169,16 +193,44 @@ void test_breadthFirstSearch(int &testPassed, int &testFailed, Graph& g) {
     }
 }
 
+
 //=========================================================
 // Test depthFirstSearch
 // Purpose:
 //  - Verify DFS traversal and parent computation.
 //=========================================================
-void test_depthFirstSearch(int &testPassed, int &testFailed, Graph& g) {
+void test_depthFirstSearch(int &testPassed, int &testFailed) {
     try {
+        Graph g;
+        g.addVertex(1);
+        g.addVertex(2);
+        g.addVertex(3);
+        g.addVertex(4);
+        g.addVertex(5);
+        g.addVertex(6);
+
+        g.addEdge(1, 2);
+        g.addEdge(1, 4);
+        g.addEdge(2, 5);
+        g.addEdge(3, 5);
+        g.addEdge(3, 6);
+        g.addEdge(4, 5);
+        g.addEdge(5, 5); // Self-loop on vertex 5
+        g.addEdge(6, 6); // Self-loop on vertex 6
 
         auto dfs = g.depthFirstSearch();
-        assert(get<0>(dfs[1]) != 0);  // Discovery time for vertex 1
+        // Verify discovery and finish times for key vertices
+        assert(get<0>(dfs[1]) < get<1>(dfs[1])); // Vertex 1: Discovery < Finish
+        assert(get<0>(dfs[2]) < get<1>(dfs[2])); // Vertex 2: Discovery < Finish
+        assert(get<0>(dfs[4]) < get<1>(dfs[4])); // Vertex 4: Discovery < Finish
+        assert(get<0>(dfs[5]) < get<1>(dfs[5])); // Vertex 5: Discovery < Finish
+        assert(get<0>(dfs[3]) < get<1>(dfs[3])); // Vertex 3: Discovery < Finish
+        assert(get<0>(dfs[6]) < get<1>(dfs[6])); // Vertex 6: Discovery < Finish
+
+        // Verify relative discovery order
+        assert(get<0>(dfs[1]) < get<0>(dfs[2])); // Vertex 1 discovers Vertex 2
+        assert(get<0>(dfs[1]) < get<0>(dfs[4])); // Vertex 1 discovers Vertex 4
+        assert(get<0>(dfs[2]) < get<0>(dfs[5])); // Vertex 2 discovers Vertex 5
         testPassed++;
         cout << "Passed test_depthFirstSearch" << endl;
     } catch (const exception &e) {
@@ -192,10 +244,27 @@ void test_depthFirstSearch(int &testPassed, int &testFailed, Graph& g) {
 // Purpose:
 //  - Verify topological ordering computation.
 //=========================================================
-void test_getOrdering(int &testPassed, int &testFailed, Graph& g) {
+void test_getOrdering(int &testPassed, int &testFailed) {
     try {
+        Graph g;
+        g.addVertex(1);
+        g.addVertex(2);
+        g.addVertex(3);
+        g.addVertex(4);
+        g.addVertex(5);
+        g.addVertex(6);
+
+        g.addEdge(1, 2);
+        g.addEdge(1, 4);
+        g.addEdge(2, 5);
+        g.addEdge(3, 5);
+        g.addEdge(3, 6);
+        g.addEdge(4, 5);
+        g.addEdge(5, 5); // Self-loop on vertex 5
+        g.addEdge(6, 6); // Self-loop on vertex 6
+
         auto order = g.getOrdering();
-        assert(!order.empty());
+        assert(order.empty());
         testPassed++;
         cout << "Passed test_getOrdering" << endl;
     } catch (const exception &e) {
@@ -211,9 +280,16 @@ void test_getOrdering(int &testPassed, int &testFailed, Graph& g) {
 //=========================================================
 void test_readFromSTDIN(int &testPassed, int &testFailed, Graph& g) {
     try {
-        assert(g.edgeIn(1, 2));
-        assert(g.edgeIn(4, 6));
-        assert(!g.edgeIn(7, 8)); // Edge that shouldn't exist
+        assert(g.edgeIn(1, 2)); // Edge exists
+        assert(g.edgeIn(1, 4)); // Edge exists
+        assert(g.edgeIn(2, 5)); // Edge exists
+        assert(g.edgeIn(3, 5)); // Edge exists
+        assert(g.edgeIn(3, 6)); // Edge exists
+        assert(g.edgeIn(4, 5)); // Edge exists
+        assert(g.edgeIn(5, 5)); // Self-loop exists
+        assert(g.edgeIn(6, 6)); // Self-loop exists
+        assert(!g.edgeIn(1, 3)); // Edge that shouldn't exist
+        assert(!g.edgeIn(2, 6)); // Edge that shouldn't exist
         testPassed++;
         cout << "Passed test_readFromSTDIN" << endl;
     } catch (const exception &e) {

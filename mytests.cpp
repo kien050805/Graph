@@ -35,7 +35,7 @@ int main()
 
     // Initialize the graph from standard input
     Graph g;
-    g.readFromSTDIN();
+    g = Graph::readFromSTDIN();
 
     // Run the tests
     test_addVertex(testPassed, testFailed);

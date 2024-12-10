@@ -176,6 +176,10 @@ void Graph::removeEdge(int u, int v)
 //==============================================================
 bool Graph::edgeIn(int u, int v)
 {
+    if (!check_vertex(u))
+    {
+        return false;
+    }
     for (int i = 0; i < Adj[u].size(); i++)
     {
         if (Adj[u][i] == v)
